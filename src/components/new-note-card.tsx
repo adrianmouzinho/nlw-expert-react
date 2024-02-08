@@ -3,7 +3,11 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
 import { toast } from 'sonner'
 
-export function NewNoteCard() {
+interface NewNoteCardProps {
+  onSaveNote: (content: string) => void
+}
+
+export function NewNoteCard({ onSaveNote }: NewNoteCardProps) {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true)
   const [content, setContent] = useState('')
 
@@ -21,6 +25,15 @@ export function NewNoteCard() {
 
   function handleSaveNote(event: FormEvent) {
     event.preventDefault()
+
+    if (!content) {
+      return
+    }
+
+    onSaveNote(content)
+
+    setContent('')
+    setShouldShowOnboarding(true)
 
     toast.success('Nota criada com sucesso!')
   }
@@ -74,6 +87,7 @@ export function NewNoteCard() {
                   spellCheck={false}
                   className="flex-1 text-sm leading-6 text-slate-400 bg-transparent outline-none resize-none"
                   onChange={handleContentChange}
+                  value={content}
                 ></textarea>
               )}
             </div>
